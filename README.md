@@ -2,7 +2,7 @@
 # System za upravljanje restavracije SmartPanda
 
 
-Ta repozitorij vsebuje system kot poslovna rešitev pri poslovanju kitajske restavracije z imenom Panda. Ta sistem je v obliki spletne straini in vsebuje 3 storitve, ki so namenjene za stranke, zaposlene in lastnike odvisno od namen storitve
+SmartPanda je sistem kot poslovna rešitev pri poslovanju kitajske restavracije z imenom Panda. Ta sistem je v obliki spletne straini in vsebuje 3 storitve, ki so namenjene za stranke, zaposlene in lastnike odvisno od namen storitve
 
 
 ## 1.  Storitev za naročanje in spremljanje trenutne zaloge (Trenutna_zaloga):
