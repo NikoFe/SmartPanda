@@ -1,0 +1,6 @@
+
+/*jed; 0 -100
+jed_has_sestavina;  101 -200
+sestavina; 201 -300
+sestavina_has_alergen; 301 -400
+alergen; 401 -500*/
