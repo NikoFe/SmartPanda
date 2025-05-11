@@ -1,0 +1,60 @@
+.meal-div{
+
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  background-color:lightblue;
+  gap: 5px;
+  padding: 10px;
+}
+.main-div{
+  background-color:lightcyan;
+  margin-left: 350px;
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+  gap: 15px;
+  
+}
+
+.icon{
+  height:100px;
+  width:100px
+}
+
+.details{
+  display:flex;
+  flex-direction: column;
+  background-color: lightblue;
+  gap:5px;
+  margin-left: 350px;
+  padding:5px;
+}
+
+.description{
+
+  border-color:black;
+  border-width: 2px ;
+  border-style: solid;
+}
+
+.ingredients{
+  display:flex;
+  border-color:darkblue;
+  border-width: 2px ;
+  border-style: solid;
+  gap:10px;
+  flex-direction: column;
+  padding: 5px;
+}
+
+.ingredient-div{
+
+  border-color:darkblue;
+  border-width: 1px ;
+  border-style: solid;
+  display:flex;
+  gap:5px;
+  padding: 5px;
+  flex-direction: column;
+}
