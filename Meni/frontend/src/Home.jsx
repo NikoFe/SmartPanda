@@ -14,7 +14,7 @@ useEffect(() => {
   const getEntry = async () => {
     try {
       const response = await axios.get(API_URL + "/meals");
-      const mealsFromDB = response.data.rows.map((meal) => ({
+      const mealsFromDB = response.data.map((meal) => ({
         id: meal.id,
         ime: meal.ime,
         cena: meal.cena,

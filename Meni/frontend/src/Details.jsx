@@ -24,9 +24,11 @@ const Details = ({id}) => {
     console.log("id: ", id)
     console.log("response: ", response)
     console.log("DATA: ", response.data)
-    console.log("ROWS: ", response.data.rows)
-    console.log("rows1: ", response.data.rows[0])
-    let selectedArray=response.data.rows[0]
+    console.log("selected: ", response.data[0])
+   // console.log("rows1: ", response.rows[0])
+    let selectedArray=response.data[0]
+    console.log("selected array: ",selectedArray)
+    console.log("selected array ime: ",selectedArray.ime)
     setSelected(selectedArray)
 
    }else {
@@ -43,9 +45,15 @@ const Details = ({id}) => {
         const getIngredients = async () => {
           try {
             const response = await axios.get(API_URL + `/ingredients/${id}`);
-            const ingredientsFromDB = response.data.rows.map((ingredient) => ({
-              ime: ingredient.ime,
-              kalorije: ingredient.kalorije,
+
+
+             console.log("INGGGGGGGGGGGGGG response: ", response)
+             console.log("INGGGGGGGGGGGGGG response data: ", response.data[0])
+
+            const ingredientsFromDB = response.data.map((ingredient) => ({
+
+            ime: ingredient.ime,
+            kalorije: ingredient.kalorije,
          
             }));
       

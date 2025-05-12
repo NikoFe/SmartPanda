@@ -2,106 +2,75 @@ const express = require('express')
 const app = express()
 const port = 3000
 const cors = require("cors");
-const mysql = require("mysql2");
+const mysql = require("mysql2/promise");
 
 app.use(cors())
 
-const connection = mysql.createConnection({
+const dbConfig = {
     host: "localhost",
     user: "root",
     password: "artholus6*Databa5e",
     database: "smartpanda",
-  });
-  
-    connection.connect(err => {
-        if (err) {
-        console.error('Error connecting to MySQL:', err);
-        return;
-        }
-        console.log('Connected to MySQL database');
-    });
-  
-
-  /*
-  connection.query("SELECT * FROM jed", (err, rows, fields) => {
-    if (err) {
-      throw err;
-      return;
-    }
-    console.log("Rows returned:", rows);
-    //  console.log("The solution is: ", rows[0].solution);
-  });*/
-  
-
+};
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
-app.get('/meals', (req, res) => {
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+app.get('/meals',async (req, res) => {
  console.log("FETCHING MEALS!:")
+try {
 
- connection.query("SELECT * FROM jed", (err, rows, fields) => {
-    try{
-    if (err) {
- 
-      throw err;
-    }
-    res.status(200).send({
-        rows: rows
-       }
-       )
-    }catch(e){
-        return res.status(500).send('Database error');
-    }
-  });
+    const connection = (await mysql.createConnection(dbConfig));
+    const [rows] = await connection.execute("SELECT * FROM jed");
+    //await connection.end();
+    console.log("ROWS: ",rows)
+    res.json(rows);
+  } catch (error) {
+    console.error("Error inserting post:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
   })
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+  app.get('/meals/:id', async (req, res) => {
 
-  app.get('/meals/:id', (req, res) => {
-
-    id= req.params.id
+    id= parseInt(req.params.id)
     console.log("URL id: ||", id,"||")
 
-   // id= JSON.stringify(req.params.id).replace(":","")
-    
-    connection.query("SELECT * FROM jed WHERE id="+id, (err, rows, fields) => {
-        try{
-        if (err) {
-     
-          throw err;
-        }
-        res.status(200).send({
-            rows: rows
-           }
-           )
-        }catch(e){
-            return res.status(500).send('Database error');
-        }
-      });
+    try {
+      const connection =(await mysql.createConnection(dbConfig));
+      const [rows] =  await connection.execute(
+        "SELECT * FROM Jed WHERE id = ?",
+        [id]
+      );
+      console.log("ROWS: ",rows)
+      res.json(rows);
+    } catch (error) {
+      console.error("Error getting meal post:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+
   })
+  app.get('/ingredients/:id', async(req, res) => {
 
-
-
-  app.get('/ingredients/:id', (req, res) => {
-
-    id= req.params.id
+    id=  parseInt(req.params.id)
     console.log("URL id: ||", id,"||")
 
-    let queryString = `SELECT sestavina.ime,kalorije FROM sestavina JOIN jed_has_sestavina ON Sestavina_id = sestavina.id  JOIN jed ON jed.id=Jed_id WHERE Jed_id =${id}`;
+    //let queryString = `SELECT sestavina.ime,kalorije FROM sestavina JOIN jed_has_sestavina ON Sestavina_id = sestavina.id  JOIN jed ON jed.id=Jed_id WHERE Jed_id =${id}`;
 
-    connection.query(queryString, (err, rows, fields) => {
-        try{
-        if (err) {
-     
-          throw err;
-        }
-        res.status(200).send({
-            rows: rows
-           }
-           )
-        }catch(e){
-            return res.status(500).send('Database error');
-        }
-      });
+    try {
+      const connection =(await mysql.createConnection(dbConfig));
+      const [rows] =  await connection.execute(
+        "SELECT sestavina.ime,kalorije FROM sestavina JOIN jed_has_sestavina ON Sestavina_id = sestavina.id  JOIN jed ON jed.id=Jed_id WHERE Jed_id = ?",
+        [id]
+      );
+      console.log("ROWS: ",rows)
+      res.json(rows);
+    } catch (error) {
+      console.error("Error getting meal post:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+
   })
 
 process.on('SIGINT', () => {
@@ -119,3 +88,4 @@ app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
 }
+//module.exports = { app, connection };
