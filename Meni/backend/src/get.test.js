@@ -86,7 +86,7 @@ jest.mock("mysql2/promise");
       expect(response.body).toEqual(mockJedi);
       
       expect(mockConnection.execute).toHaveBeenCalledWith(
-        "SELECT * FROM Jed WHERE id = ?",
+        "SELECT * FROM jed WHERE id = ?",
         [mealId]
       );
     });
