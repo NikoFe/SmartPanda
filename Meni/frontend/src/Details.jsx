@@ -12,11 +12,10 @@ const Details = ({id}) => {
     const [ingredients, setIngredients] = useState([]);
     const [alergens, setAlergens] = useState([]);
     const [totalCalories, setTotalCalories] = useState(0);
+    const [selected, setSelected] = useState(null);
+    ( { id } = useParams());
 
-  ( { id } = useParams());
-  const [selected, setSelected] = useState(null);
   useEffect(() => {
-      
    const getSingle = async ()=> {
   if(id!=0) {
     const response = await axios.get(API_URL + `/meals/${id}`);
@@ -39,30 +38,22 @@ const Details = ({id}) => {
    getSingle();
        }, [id])
     
-
        /////////////////////////////////////////////////////////////////////////////////////////
        useEffect(() => {
         const getIngredients = async () => {
           try {
             const response = await axios.get(API_URL + `/ingredients/${id}`);
-
-
              console.log("INGGGGGGGGGGGGGG response: ", response)
              console.log("INGGGGGGGGGGGGGG response data: ", response.data[0])
-
             const ingredientsFromDB = response.data.map((ingredient) => ({
-
             ime: ingredient.ime,
             kalorije: ingredient.kalorije,
-         
             }));
-      
             setIngredients(ingredientsFromDB); 
           } catch (error) {
             console.log("ERROR: ", error.message);
           }
         };
-
         getIngredients();
       }, []);
        /////////////////////////////////////////////////////////////////////////////////////////
@@ -77,7 +68,6 @@ const Details = ({id}) => {
             console.log("TOTAL CALORIE SUM: ", sum)
             setTotalCalories(sum)
           };
-
        console.log("INGREDIENTS: ", ingredients)
        console.log("INGREDIENTS[0]: ", ingredients[0])
        getTotalCalories()
@@ -93,7 +83,6 @@ const Details = ({id}) => {
     <strong>{selected ? selected.opis : ""}</strong>
     </div>
     <strong>Calorie count {totalCalories}</strong>
-
     <strong>INGREDIENTS:</strong>
     <div classname= "ingredients">
     {
@@ -106,8 +95,6 @@ const Details = ({id}) => {
     }
     </div>
     </div>
-   
-
   )
 }
 

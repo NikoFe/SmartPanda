@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package si.um.feri;
+
+// The UserService definition.
+service UserService {
+  // Creates a new user
+  rpc CreateUser (CreateUserRequest) returns (UserResponse) {}
+
+  // Retrieves a user by ID
+  rpc GetUser (GetUserRequest) returns (UserResponse) {}
+}
+
+// Request message for creating a user
+message CreateUserRequest {
+  string name = 1;
+  int32 age = 2;
+}
+
+// Request message for getting a user
+message GetUserRequest {
+  string id = 1;
+}
+
+// Response message containing user details
+message UserResponse {
+  string id = 1;
+  string name = 2;
+  int32 age = 3;
+}

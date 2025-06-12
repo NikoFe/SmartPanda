@@ -1,0 +1,42 @@
+#version: '3.8'
+
+services:
+  meni-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - meni-db
+    environment:
+      - DB_HOST=meni-db
+      - DB_USER=root
+      - DB_PASSWORD=artholus6*Databa5e
+      - DB_NAME=smartpanda
+
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+
+  meni-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+  meni-db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: artholus6*Databa5e
+      MYSQL_DATABASE: smartpanda
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d
+

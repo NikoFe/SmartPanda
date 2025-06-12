@@ -3,14 +3,14 @@ const app = express()
 const port = 3000
 const cors = require("cors");
 const mysql = require("mysql2/promise");
+require('dotenv').config();
 
 app.use(cors())
-
 const dbConfig = {
-    host: "localhost",
-    user: "root",
-    password: "artholus6*Databa5e",
-    database: "smartpanda",
+  host: process.env.DB_HOST || "localhost",
+  user: process.env.DB_USER || "root",
+  password: process.env.DB_PASSWORD || "artholus6*Databa5e",
+  database: process.env.DB_NAME || "smartpanda",
 };
 
 app.get('/', (req, res) => {
@@ -22,6 +22,7 @@ app.get('/meals',async (req, res) => {
 try {
 
     const connection = (await mysql.createConnection(dbConfig));
+    //const [rows] = await connection.execute("SHOW TABLES");
     const [rows] = await connection.execute("SELECT * FROM jed");
     //await connection.end();
     console.log("ROWS: ",rows)
@@ -40,7 +41,7 @@ try {
     try {
       const connection =(await mysql.createConnection(dbConfig));
       const [rows] =  await connection.execute(
-        "SELECT * FROM Jed WHERE id = ?",
+        "SELECT * FROM jed WHERE id = ?",
         [id]
       );
       console.log("ROWS: ",rows)
