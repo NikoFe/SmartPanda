@@ -1,32 +1,18 @@
-# ---------- FRONTEND ----------
-FROM node:18-alpine AS frontend-build
-WORKDIR /Meni/frontend
+FROM node:18-alpine
+
+# Set working directory
+WORKDIR /app
 
 # Install dependencies
-COPY frontend/package*.json ./ 
-COPY frontend/vite.config.js ./
+COPY package*.json ./
 RUN npm install
 
-# Copy and build frontend
-COPY frontend/ . 
-RUN npm run build
+RUN npm i -g serve
+# Copy your backend code
+COPY . .
 
-
-# ---------- BACKEND ----------
-FROM node:18-alpine AS backend
-WORKDIR /Meni/backend
-
-# Install dependencies
-COPY backend/package*.json ./
-RUN npm install
-
-# Copy backend source code
-COPY backend/ . 
-
-# Optionally copy frontend build into backend to serve via Express
-COPY --from=frontend-build /Meni/frontend/dist ./public
-
+# Expose backend port
 EXPOSE 3000
 
-# Start the backend server
+# Run the dev script
 CMD ["npm", "run", "dev"]

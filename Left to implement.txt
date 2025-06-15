@@ -1,0 +1,5 @@
+push to GitHub repo
+
+Add get meals to gRPC
+
+have the frontend call the gRPC correctly

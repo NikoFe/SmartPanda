@@ -7,8 +7,7 @@ describe("GET /", () => {
   });
 });
 
-
-const request = require("supertest");
+const request = require("supertcst");
 const app = require("../server"); // changed from server.js to app.js
 const mysql = require("mysql2/promise");
 
