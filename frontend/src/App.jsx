@@ -8,15 +8,25 @@ import Menu from './Menu'
 import StockList from './StockList'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import Register from "./Register"
+import Login from "./Login"
 import KeyHandler from './KeyHandler'
+import Approval from "./Approval"
 
 const API_URL = "http://localhost:3000";
 
 function App() {
 //  const [count, setCount] = useState(0)
+const [username, setUsername] = useState("");
+const [password, setPassword] = useState("");
+const [location, setLocation] = useState("");
 const [stockMeals, setStockMeals] = useState([]);
 const [meals, setMeals] = useState([]);
 const [mealId, setMealId] = useState(0);
+const [isAdmin, setIsAdmin] = useState(false);
+const [usersHaveMeals, setUsersHaveMeals] = useState([]);
+
+
 
   return (
     <>
@@ -30,6 +40,10 @@ const [mealId, setMealId] = useState(0);
                  meals={meals}
                  setMeals={setMeals}
                  setMealId={setMealId}
+                 username={username}
+                 password={password}
+                 isAdmin={isAdmin}
+                 setIsAdmin={setIsAdmin}
               />
             }
           />
@@ -44,7 +58,6 @@ const [mealId, setMealId] = useState(0);
             }
           />
 
-
           <Route
             path="/details/:id"
             element={
@@ -57,14 +70,52 @@ const [mealId, setMealId] = useState(0);
           <Route
             path="/stock/"
             element={
+
               <StockList
                 meals={stockMeals}
                 setMeals={setStockMeals}
                 setMealId={setMealId}
-           
+                username={username}
+                setUsername={setUsername}
+                password={password}
+                setPassword={setPassword}
+                location={location}
+                setLocation={setLocation}
               />
             }
           />
+          <Route
+            path="/register/"
+            element={
+              <Register
+              />
+            }
+          />
+          <Route
+            path="/login/"
+            element={
+              <Login
+                username={username}
+                setUsername={setUsername}
+                password={password}
+                setPassword={setPassword}
+                setIsAdmin={setIsAdmin}
+              />
+            }
+          />
+          <Route
+            path="/approval/"
+            element={
+              <Approval
+              usersHaveMeals ={usersHaveMeals}
+              setUsersHaveMeals ={setUsersHaveMeals}
+              />
+            }
+          />
+
+
+
+
         </Routes>
         <></>
       </BrowserRouter>

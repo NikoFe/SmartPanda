@@ -9,10 +9,10 @@ import Stock from './Stock'
 import axios from "axios";
 const gRPC_URL = "http://localhost:3001";
 
-const StockList = ({meals, setMeals, setMealId}) => {
+const StockList = ({meals, setMeals, setMealId, username, setUsername, password, setPassword,location, setLocation}) => {
 const navigate = useNavigate();
 
-   const getEntry = async () => {
+   const getMeals = async () => {
      try {
        const response = await axios.get(gRPC_URL + "/meals");
        const mealsFromDB = response.data.map((meal) => ({
@@ -30,27 +30,25 @@ const navigate = useNavigate();
      }
    };
 
-
-
  useEffect(() => {
-
-   getEntry();
- }, []);
- 
- useEffect(() => {
+   getMeals();
  console.log("meals changed: ",JSON.stringify(meals))
  console.log("meals length: ",JSON.stringify(meals.length))
- }, [meals]);
+ }, []);
 
   return (
      <div className="meals-div">
 
    {
   meals.map((meal, index) => (      
+
    <Stock
     meal={meal}
     setMealId={setMealId}
-    getUpdatedStock= {getEntry}
+    getUpdatedStock= {getMeals}
+    username={username}
+    password={password}
+    
    ></Stock>
   ))
   }

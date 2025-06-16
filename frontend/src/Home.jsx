@@ -7,17 +7,27 @@ import Meal from './Meal'
 import axios from "axios";
 const API_URL = "http://localhost:3000";
 
-function Home({meals, setMeals, setMealId}) {
+function Home({meals, setMeals, setMealId, username, password, isAdmin, setIsAdmin}) {
 const navigate = useNavigate();
 
- 
+
+
+const checkLogin = (navigationString) => {
+  if (username !== "" && password !== "") {
+    navigate(navigationString);
+  } else {
+    alert("Please login first!");
+  }
+};
+
   return (
   <>
+  <button onClick={()=>{navigate("register")}} >REGISTER</button> 
+  <button onClick={()=>{navigate("login")}} >LOGIN</button> 
   <button onClick={()=>{navigate("menu")}}  >MENU</button> 
-  <button onClick={()=>{navigate("stock")}} >STOCK</button> 
-  <button>ORDERS</button> 
+  <button onClick={/*checkLogin("stock") */ ()=>{navigate("stock")}} >ORDER</button> 
+  {isAdmin?  <button onClick={()=>{navigate("approval")}}  >APPROVAL</button> : ""   }
   </>
-
 
   )
 }
