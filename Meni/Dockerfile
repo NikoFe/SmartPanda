@@ -5,6 +5,7 @@ WORKDIR /app
 
 # Install dependencies
 COPY package*.json ./
+COPY server.js .
 RUN npm install
 
 RUN npm i -g serve

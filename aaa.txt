@@ -1,0 +1,47 @@
+
+  narocanje:
+    build:
+      context: ./Narocanje_jedi
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001" # For gateway.js
+      - "3002:3002" # For server2.js (gRPC)
+    depends_on:
+      - database
+    environment:
+      - DB_HOST=database
+      - DB_USER=root
+      - DB_PASSWORD=artholus6*Databa5e
+      - DB_NAME=smartpanda
+    volumes:
+      - ./Narocanje_jedi:/app
+      - /app/node_modules # Crucial for Node.js when mounting code
+  
+  odobrenje:
+    build:
+      context: ./Odobrenje_Narocila
+      dockerfile: Dockerfile
+    ports:
+      - "3003:3003" # For gateway.js
+    depends_on:
+      - database
+    environment:
+      - DB_HOST=database
+      - DB_USER=root
+      - DB_PASSWORD=artholus6*Databa5e
+      - DB_NAME=smartpanda
+    volumes:
+      - ./Odobrenje_Narocila:/app
+      - /app/node_modules # Crucial for Node.js when mounting code
+
+  database:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: artholus6*Databa5e
+      MYSQL_DATABASE: smartpanda
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d
+

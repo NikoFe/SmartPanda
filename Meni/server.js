@@ -8,14 +8,22 @@ require('dotenv').config();
 app.use(express.json());
 app.use(cors())
 const dbConfig = {
-  //host: process.env.DB_HOST || "localhost",
-  //user: process.env.DB_USER || "root",
-  //password: process.env.DB_PASSWORD || "artholus6*Databa5e",
-  //database: process.env.DB_NAME || "smartpanda",
-  host: "localhost",
+   /*
+  host: process.env.DB_HOST ,
+  user: process.env.DB_USER ,
+  password: process.env.DB_PASSWORD ,
+  database: process.env.DB_NAME ,
+ */
+  
+  host: process.env.DB_HOST || "localhost",
+  user: process.env.DB_USER || "root",
+  password: process.env.DB_PASSWORD || "artholus6*Databa5e",
+  database: process.env.DB_NAME || "smartpanda",
+  
+ /* host: "localhost",
   user: "root",
   password: "artholus6*Databa5e",
-  database: "smartpanda",
+  database: "smartpanda"*/
 };
 
 app.get('/', (req, res) => {
@@ -152,6 +160,8 @@ app.listen(port, () => {
 
 
   app.get('/validateUser/:username/:password', async(req, res) => {
+   console.log( "host: "+process.env.DB_HOST+" user "+  process.env.DB_USER+
+     " password: "+ process.env.DB_PASSWORD+" database: "+ process.env.DB_NAME )
    console.log("VALIDATING USER!")
    const {username, password} = req.params
    const querry=  "SELECT * FROM uporabnik WHERE ime=\""+username+"\" AND geslo =\""+password+"\""

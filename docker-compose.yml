@@ -1,0 +1,44 @@
+#version: '3.8'
+
+services:
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+  meni:
+    build:
+      context: ./Meni
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - database
+    environment:
+      - DB_HOST=database
+      - DB_USER=root
+      - DB_PASSWORD=artholus6*Databa5e
+      - DB_NAME=smartpanda
+    volumes:
+      - ./Meni:/app # This assumes your server.js and package.json are directly in ./Meni
+      - /app/node_modules # For node_modules inside the container
+     # - ./backend:/app
+     # - /app/node_modules
+
+  database:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: artholus6*Databa5e
+      MYSQL_DATABASE: smartpanda
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d
+

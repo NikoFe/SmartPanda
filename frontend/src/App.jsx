@@ -26,8 +26,6 @@ const [mealId, setMealId] = useState(0);
 const [isAdmin, setIsAdmin] = useState(false);
 const [usersHaveMeals, setUsersHaveMeals] = useState([]);
 
-
-
   return (
     <>
       <BrowserRouter>

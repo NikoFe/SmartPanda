@@ -13,8 +13,6 @@ const packageDef = protoLoader.loadSync(PROTO_PATH, {
   oneofs: true
 });
 
-
-
 const grpcObject = grpc.loadPackageDefinition(packageDef);
 const dataPackage = grpcObject.data;
 

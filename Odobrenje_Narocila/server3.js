@@ -26,7 +26,6 @@ app.get('/', (req, res) => {
 app.get('/user_has_meal',async (req, res) => {
  console.log("FETCHING MEALS!:")
 try {
-
     const connection = (await mysql.createConnection(dbConfig));
     //const [rows] = await connection.execute("SHOW TABLES");
     const [rows] = await connection.execute("SELECT * FROM uporabnik_has_jed");
@@ -59,7 +58,6 @@ try {
 
   app.delete('/user_has_meal/:id', async(req, res) => {
     let {id}=req.params
-
     try {
       const connection =(await mysql.createConnection(dbConfig));
       const [rows] =  await connection.execute(
