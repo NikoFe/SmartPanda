@@ -10,7 +10,7 @@ on:
       - main
 
 jobs:
-  build-backend:
+  build-Meni:
     runs-on: ubuntu-latest
 
     steps:
@@ -26,14 +26,14 @@ jobs:
       - name: Cache node_modules
         uses: actions/cache@v3
         with:
-          path: Meni/backend/node_modules
-          key: ${{ runner.os }}-backend-${{ hashFiles('Meni/backend/package-lock.json') }}
+          path: Meni/node_modules
+          key: ${{ runner.os }}-backend-${{ hashFiles('Meni/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-backend-
 
       - name: Install dependencies
         run: |
-          cd Meni/backend
+          cd Meni
           npm install
 
       - name: Upload backend artifacts
@@ -41,8 +41,8 @@ jobs:
         with:
           name: backend-build
           path: |
-            Meni/backend/
-            Meni/backend/node_modules/
+            Meni/
+            Meni/node_modules/
 
   test-backend:
     needs: build-backend
@@ -60,26 +60,26 @@ jobs:
       - name: Cache node_modules
         uses: actions/cache@v3
         with:
-          path: Meni/backend/node_modules
-          key: ${{ runner.os }}-backend-${{ hashFiles('Meni/backend/package-lock.json') }}
+          path: Meni/node_modules
+          key: ${{ runner.os }}-backend-${{ hashFiles('Meni/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-backend-
 
       - name: Install dependencies
         run: |
-          cd Meni/backend
+          cd Meni
           npm install
 
       - name: Fix Jest permissions
-        run: chmod +x Meni/backend/node_modules/.bin/jest
+        run: chmod +x Meni/node_modules/.bin/jest
 
       - name: Run tests with coverage
         run: |
-          cd Meni/backend
+          cd Meni
           npm run test:ci
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
         with:
           name: backend-coverage
-          path: Meni/backend/coverage/
+          path: Meni/coverage/

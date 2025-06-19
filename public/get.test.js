@@ -8,7 +8,7 @@ describe("GET /", () => {
 });
 
 const request = require("supertest");
-const app = require("../Meni/server"); // changed from server.js to app.js
+const app = require("../Meni/server"); 
 const mysql = require("mysql2/promise");
 
 jest.mock("mysql2/promise");
