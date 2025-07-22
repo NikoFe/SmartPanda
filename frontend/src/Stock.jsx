@@ -19,14 +19,14 @@ const Stock = ({ meal, setMealId, getUpdatedStock ,username, password}) => {
 
       try {
         const response1 = await axios.post(API_URL + "/user_has_meal/",{
-        id:id,
+      //  id:id,
         user_id:userId,
         meal_id:meal_id,
         amount:parseInt(boughtCount)
 
         });
 
-        const currentUserId=response1.data[0].id
+       //const currentUserId=response1.data[0].id
       } catch (error) {
         console.log("ERROR: ", error.message);
       }
@@ -34,7 +34,8 @@ const Stock = ({ meal, setMealId, getUpdatedStock ,username, password}) => {
 
 
   const Buy = async (name) => {
-    console.log(parseInt(boughtCount));
+    console.log("BUY COUNT: "+parseInt(boughtCount));
+    console.log("meal zaloga: "+parseInt( meal.zaloga));
     if (
       meal.zaloga > parseInt(boughtCount) &&
       parseInt(boughtCount) < 6 && parseInt(boughtCount) > 0
@@ -51,7 +52,7 @@ const Stock = ({ meal, setMealId, getUpdatedStock ,username, password}) => {
         const response1 = await axios.get(API_URL + "/users/"+username+"/"+password);
         //alert("STOCKLIST: "+JSON.stringify(response1.data[0].id))
         const currentUserId=response1.data[0].id
-
+        /* Should be done in Odobrenje
         try {
           const response2 = await axios.put(API_URL + "/meals", {
             id: meal.id,
@@ -60,29 +61,15 @@ const Stock = ({ meal, setMealId, getUpdatedStock ,username, password}) => {
           console.log("UPDATE ZALOGA RESPONSE: ",JSON.stringify(response2.data))
         } catch (error) {
           console.log("UPDATE ZALOGA ERROR: ", error.message);
-        }
-
-
+        }*/
         await createInBetween(currentUserId);
-        await getUpdatedStock();
+        //await getUpdatedStock();
 
 
       } catch (error) {
         console.log("ERROR: ", error.message);
       }
 
-     //alert("response1: ", JSON.stringify(response1))
-
-/*
-     try {
-        const response = await axios.post(API_URL + "/user_has_meals", {
-          meal_id: meal.id,
-          amount: amount,
-        });
-      } catch (error) {
-        console.log("ERROR: ", error.message);
-      }
-  */
     } else {
       alert("value too high or too low!");
     }

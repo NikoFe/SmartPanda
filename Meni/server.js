@@ -8,22 +8,12 @@ require('dotenv').config();
 app.use(express.json());
 app.use(cors())
 const dbConfig = {
-   /*
-  host: process.env.DB_HOST ,
-  user: process.env.DB_USER ,
-  password: process.env.DB_PASSWORD ,
-  database: process.env.DB_NAME ,
- */
-  
-  host: process.env.DB_HOST || "localhost",
-  user: process.env.DB_USER || "root",
-  password: process.env.DB_PASSWORD || "artholus6*Databa5e",
-  database: process.env.DB_NAME || "smartpanda",
-  
- /* host: "localhost",
-  user: "root",
-  password: "artholus6*Databa5e",
-  database: "smartpanda"*/
+   
+  host:  `${process.env.DB_HOST}`,
+  user:  `${process.env.DB_USER}`,
+  password:  `${process.env.DB_PASSWORD}` ,
+  database:  `${process.env.DB_NAME}` ,
+
 };
 
 app.get('/', (req, res) => {

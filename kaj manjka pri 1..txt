@@ -1,5 +1,0 @@
-OpenAPI (npr.: Swagger)
-
-Izboljšaj frontend videz
-
-Zaženi docker compose v unit testu.
