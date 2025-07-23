@@ -12,6 +12,7 @@ import Register from "./Register"
 import Login from "./Login"
 import KeyHandler from './KeyHandler'
 import Approval from "./Approval"
+import Admin from './Admin'
 
 const API_URL = "http://localhost:3000";
 
@@ -55,6 +56,16 @@ const [usersHaveMeals, setUsersHaveMeals] = useState([]);
               />
             }
           />
+          <Route
+            path="/admin"
+            element={
+              <Admin
+                 username={username}
+                 password={password}
+              />
+            }
+          />
+
 
           <Route
             path="/details/:id"

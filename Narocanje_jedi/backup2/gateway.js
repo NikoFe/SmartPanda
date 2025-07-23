@@ -1,25 +1,8 @@
 const express = require('express');
 require('dotenv').config();
 const mysql = require('mysql2/promise');
-const grpc = require('@grpc/grpc-js') 
-const protoLoader = require('@grpc/proto-loader') 
-
-const PROTO_PATH = '../Odobrenje_Narocila/proto/pending_order.proto';
-//const packageDefinition = protoLoader.loadSync(PROTO_PATH);
-
-const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
-  keepCase: true,
-  longs: String,
-  enums: String,
-  defaults: true,
-  oneofs: true,
-});
-
-const proto = grpc.loadPackageDefinition(packageDefinition).pendingorder;
-
-const client = new proto.PendingOrderService('localhost:50051', grpc.credentials.createInsecure());
-
 const PORT = 3001
+
 
 const dbConfig = {
   host:  `${process.env.DB_HOST}`,
@@ -168,6 +151,7 @@ app.post('/user_has_meal', async(req, res) => {
       console.warn(`⚠️ WARNING: ${key} is invalid or not a number!`);
     }
   }
+
        const [rows2] = await db.execute( "SELECT * FROM uporabnik_has_jed WHERE  uporabnik_id = ? and  jed_id = ? ",
          [user_id, meal_id]);
       
@@ -184,17 +168,11 @@ app.post('/user_has_meal', async(req, res) => {
         const [rows] = await db.execute( "INSERT INTO uporabnik_has_jed VALUES (?,?,?,?)",
          [user_id, meal_id,amount,0]);
 
-       
-         console.log("<<<<<<<<<<<<<, : user_id",user_id+ " >>>>>>>>>> meal_id"+meal_id )
       ////call gRPC
 
-        client.CheckIfEnoughStock({ user_id: user_id, meal_id: meal_id }, (err, res) => {
-          if (err) console.error(err);
-          else {
-            console.log("GRPC GRPC GRPC: "+JSON.stringify(res));
-            client.DeleteTimer({ user_id: user_id, meal_id: meal_id }, (err, res) => {})
-          }
-        });
+
+
+
      res.json("succesfull!!!");
 
     } catch (error) {
