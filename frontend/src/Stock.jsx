@@ -11,70 +11,77 @@ const API_URL = "http://localhost:3001";
 const Stock = ({ meal, setMealId, getUpdatedStock ,username, password}) => {
   const navigate = useNavigate();
   const [boughtCount, setBoughtCount] = useState(0);
+  const [stateZaloga, setStateZaloga] = useState(meal.zaloga);
 
-
-  const createInBetween = async (userId) => {
+   const createInBetween = async (userId,endAmount) => {
    const id=Math.floor(Math.random()*10000)
    const meal_id = meal.id
-
+    console.log("A "+Math.random()*1000)
       try {
-        const response1 = await axios.post(API_URL + "/user_has_meal/",{
+        const response1 = await axios.post(API_URL + "/user_has_meal",{
       //  id:id,
         user_id:userId,
         meal_id:meal_id,
-        amount:parseInt(boughtCount)
-
+        amount: parseInt(boughtCount)
+       // amount:parseInt(boughtCount)
+        });
+  
+    console.log("B "+Math.random()*1000)
+     // return res.json({ message: "inserting order success" });
+      if(! response1.data.message=="inserting order success"){
+        console.error("inserting order  ERROR")
+        return;
+      }
+       console.log("C"+Math.random()*1000)
+       const response2 = await axios.put(API_URL + "/updateZaloga",{
+        user_id:userId,
+        meal_id:meal_id,
+        amount:endAmount
         });
 
+      if(! response2.data.message=="update zaloga success"){
+        console.error("zaloga  ERROR")
+        return;
+      }
+       console.log("D"+Math.random()*1000)
+      setStateZaloga(endAmount)
+       const response3 = await axios.delete(API_URL + `/user_has_meal/${userId}/${meal_id}`);
+      if(! response3.data.message=="delete timer success"){
+        console.error("timer  ERROR")
+        return;
+      }
        //const currentUserId=response1.data[0].id
       } catch (error) {
         console.log("ERROR: ", error.message);
       }
   }
 
-
   const Buy = async (name) => {
-    console.log("BUY COUNT: "+parseInt(boughtCount));
-    console.log("meal zaloga: "+parseInt( meal.zaloga));
+    console.log("BUYING "+Math.random()*1000)
     if (
-      meal.zaloga > parseInt(boughtCount) &&
+      stateZaloga> parseInt(boughtCount) &&
       parseInt(boughtCount) < 6 && parseInt(boughtCount) > 0
     ) {
-      console.log("OK");
-      const amount = meal.zaloga - boughtCount;
-      console.log("meal.zaloga: " + meal.zaloga);
-      console.log("boughtCount: " + boughtCount);
-      console.log("meal.id: " + meal.id);
-      console.log("update.amount: " + amount);
-      
+      console.log("AAAA "+Math.random()*1000)
+      //console.log("OK");
+      const endAmount = stateZaloga - boughtCount;
      // alert("password: "+password)
       try {
+        console.log("CCCC "+Math.random()*1000)
         const response1 = await axios.get(API_URL + "/users/"+username+"/"+password);
         //alert("STOCKLIST: "+JSON.stringify(response1.data[0].id))
         const currentUserId=response1.data[0].id
-        /* Should be done in Odobrenje
-        try {
-          const response2 = await axios.put(API_URL + "/meals", {
-            id: meal.id,
-            amount: amount,
-          });
-          console.log("UPDATE ZALOGA RESPONSE: ",JSON.stringify(response2.data))
-        } catch (error) {
-          console.log("UPDATE ZALOGA ERROR: ", error.message);
-        }*/
-        await createInBetween(currentUserId);
+        console.log("BBBB "+Math.random()*1000)
+        await createInBetween(currentUserId,endAmount);
         //await getUpdatedStock();
-
-
       } catch (error) {
         console.log("ERROR: ", error.message);
       }
-
     } else {
+      console.log("FAIL "+Math.random()*1000)
       alert("value too high or too low!");
     }
   };
-
   const handleCountChange = (event) => {
     setBoughtCount(event.target.value);
   };
@@ -89,11 +96,13 @@ const Stock = ({ meal, setMealId, getUpdatedStock ,username, password}) => {
         />
         <strong> {meal.ime} </strong>
 
+        <strong>USERNAME: {username} </strong>
+        <strong>PASSWORD: {password} </strong>
         <strong>MEAL ID: {meal.id} </strong>
         <p>Price: {meal.cena}</p>
         <p>Description: {meal.opis}</p>
         <p>Type: {meal.tip}</p>
-        <p>Zaloga: {meal.zaloga}</p>
+        <p>Zaloga: {stateZaloga}</p>
 
         <strong>Input buy amount</strong>
         <input

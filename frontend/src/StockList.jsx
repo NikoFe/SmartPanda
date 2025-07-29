@@ -32,6 +32,8 @@ const navigate = useNavigate();
 
  useEffect(() => {
    getMeals();
+ console.log("USERNAME USERNAME: ",username) //<--not empty string
+ console.log("USERNAME USERNAME: ",password)//<--not empty string
  console.log("meals changed: ",JSON.stringify(meals))
  console.log("meals length: ",JSON.stringify(meals.length))
  }, []);
@@ -40,6 +42,7 @@ const navigate = useNavigate();
      <div className="meals-div">
 
    {
+  username && password && meals.length > 0 &&
   meals.map((meal, index) => (      
 
    <Stock

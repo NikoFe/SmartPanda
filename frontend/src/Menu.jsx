@@ -32,8 +32,8 @@ const Menu = ({meals, setMeals, setMealId}) => {
  }, []);
  
  useEffect(() => {
- console.log("meals changed: ",JSON.stringify(meals))
- console.log("meals length: ",JSON.stringify(meals.length))
+ //console.log("meals changed: ",JSON.stringify(meals))
+ //console.log("meals length: ",JSON.stringify(meals.length))
  }, [meals]);
 
   return (

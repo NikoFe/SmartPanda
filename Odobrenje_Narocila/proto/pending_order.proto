@@ -4,17 +4,41 @@ package pendingorder;
 
 service PendingOrderService {
   rpc GetPendingOrders (Empty) returns (PendingOrdersResponse);
-  rpc CheckIfEnoughStock (ApproveOrderRequest) returns (StockResponse);
+  rpc CheckIfEnoughStock (ApproveOrderRequestTwo) returns (StockResponse);
   rpc DeleteTimer (ApproveOrderRequest) returns (Empty);
   rpc DecreaseStock (ApproveOrderRequest) returns (ApproveOrderResponse);
+  rpc UpdateZaloga (ApproveOrderRequestTwo) returns (Empty);
+  rpc InsertOrder (OrderRequest) returns (StringResult);
 }
 
 message Empty {}
 
+message OrderRequest {
+  int32 user_id = 1;
+  int32 meal_id = 2;
+  int32 amount = 3;
+}
+
+message StringResult{
+  string result = 1;
+}
+
+
+message StockRequest {
+  int32 id = 1;
+  int32 amount = 2;
+}
 message ApproveOrderRequest {
   int32 user_id = 1;
   int32 meal_id = 2;
 }
+message ApproveOrderRequestTwo
+{
+  int32 user_id = 1;
+  int32 meal_id = 2;
+  int32 amount = 3;
+}
+
 
 message StockResponse{
   bool result = 1;
