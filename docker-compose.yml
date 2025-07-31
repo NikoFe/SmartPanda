@@ -21,8 +21,9 @@ services:
     ports:
       - "3307:3306"
     volumes:
-      - ./db:/docker-entrypoint-initdb.d
-
+     # - ./db:/docker-entrypoint-initdb.d
+      - ./dump.sql:/docker-entrypoint-initdb.d/init.sql
+      #- ./dump.sql
   meni:
     build:
       context: ./Meni
@@ -42,25 +43,6 @@ services:
      # - ./backend:/app
      # - /app/node_modules
 
-  narocanje:
-    build:
-      context: ./Narocanje_jedi
-      dockerfile: Dockerfile
-    ports:
-      - "3001:3001"
-    depends_on:
-      - database
-    environment:
-      - DB_HOST=${DB_HOST}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME}
-    volumes:
-      - ./Narocanje_jedi:/app # This assumes your server.js and package.json are directly in ./Meni
-      - /app/node_modules # For node_modules inside the container
-      - ./Odobrenje_Narocila/proto:/app/external_proto # mount proto files
-
-
   odobrenje:
     build:
       context: ./Odobrenje_Narocila
@@ -77,5 +59,29 @@ services:
     volumes:
       - ./Odobrenje_Narocila:/app # This assumes your server.js and package.json are directly in ./Meni
       - /app/node_modules # For node_modules inside the container
+
+  narocanje:
+    build:
+      context: ./Narocanje_jedi
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    depends_on:
+      - database
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - GRPC_HOST=odobrenje
+      - GRPC_PORT=50051
+
+    volumes:
+      - ./Narocanje_jedi:/app # This assumes your server.js and package.json are directly in ./Meni
+      - /app/node_modules # For node_modules inside the container
+      - ./Odobrenje_Narocila/proto:/app/external_proto # mount proto files
+
+
+
 
 

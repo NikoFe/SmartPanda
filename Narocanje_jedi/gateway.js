@@ -1,5 +1,7 @@
 // gateway.js
-
+const grpcHost = process.env.GRPC_HOST || 'localhost';
+const grpcPort = process.env.GRPC_PORT || '50051';
+const grpcTarget = `${grpcHost}:${grpcPort}`;
 const express = require('express');
 const cors = require("cors");
 require('dotenv').config();
@@ -7,10 +9,22 @@ const mysql = require('mysql2/promise');
 const grpc = require('@grpc/grpc-js');
 const protoLoader = require('@grpc/proto-loader');
 const path = require('path');
+const fs = require('fs');
 
+const localPath = path.join(__dirname, '../Odobrenje_Narocila/proto/pending_order.proto');
 
-//const PROTO_PATH = path.join(__dirname, 'external_proto/pending_order.proto');
-const PROTO_PATH = path.join(__dirname, '../Odobrenje_Narocila/proto/pending_order.proto')
+const dockerPath = path.join(__dirname, 'external_proto/pending_order.proto');
+
+console.log(`Connecting to gRPC server at ${grpcTarget}`);
+
+// Decide based on which file exists
+if (fs.existsSync(localPath)) {
+  PROTO_PATH = localPath;
+} else if (fs.existsSync(dockerPath)) {
+  PROTO_PATH = dockerPath;
+} else {
+  throw new Error("pending_order.proto not found in any known location");
+}
 
 const packageDef = protoLoader.loadSync(PROTO_PATH, {
   keepCase: true,
@@ -24,8 +38,10 @@ const grpcObject = grpc.loadPackageDefinition(packageDef);
 const pendingorder = grpcObject.pendingorder;
 
 // Default client instance
+
 const defaultClient = new pendingorder.PendingOrderService(
-  'localhost:50051',
+  //'localhost:50051',
+  grpcTarget,
   grpc.credentials.createInsecure()
 );
 
