@@ -5,7 +5,7 @@ WORKDIR /app
 
 # Install dependencies
 COPY package*.json ./
-COPY server3.js .
+COPY Odobrenje.js .
 RUN npm install
 
 COPY proto ./proto

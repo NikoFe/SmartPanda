@@ -16,8 +16,8 @@ services:
     image: mysql:8.0
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: artholus6*Databa5e
+      MYSQL_DATABASE: smartpanda
     ports:
       - "3307:3306"
     volumes:
@@ -32,10 +32,10 @@ services:
     depends_on:
       - database
     environment:
-      - DB_HOST=${DB_HOST}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME}
+      - DB_HOST=database
+      - DB_USER=root
+      - DB_PASSWORD=artholus6*Databa5e
+      - DB_NAME=smartpanda
     volumes:
       - ./Meni:/app # This assumes your server.js and package.json are directly in ./Meni
       - /app/node_modules # For node_modules inside the container
@@ -51,15 +51,13 @@ services:
     depends_on:
       - database
     environment:
-      - DB_HOST=${DB_HOST}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME}
+      - DB_HOST=database
+      - DB_USER=root
+      - DB_PASSWORD=artholus6*Databa5e
+      - DB_NAME=smartpanda
     volumes:
       - ./Narocanje_jedi:/app # This assumes your server.js and package.json are directly in ./Meni
       - /app/node_modules # For node_modules inside the container
-      - ./Odobrenje_Narocila/proto:/app/external_proto # mount proto files
-
 
   odobrenje:
     build:
@@ -70,10 +68,10 @@ services:
     depends_on:
       - database
     environment:
-      - DB_HOST=${DB_HOST}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME}
+      - DB_HOST=database
+      - DB_USER=root
+      - DB_PASSWORD=artholus6*Databa5e
+      - DB_NAME=smartpanda
     volumes:
       - ./Odobrenje_Narocila:/app # This assumes your server.js and package.json are directly in ./Meni
       - /app/node_modules # For node_modules inside the container

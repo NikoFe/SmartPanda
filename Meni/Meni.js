@@ -14,6 +14,7 @@ const dbConfig = {
   user:  `${process.env.DB_USER}`,
   password:  `${process.env.DB_PASSWORD}` ,
   database:  `${process.env.DB_NAME}` ,
+  decimalNumbers: true // <<< ADD THIS
 };
 app.use(express.json());
 app.use(cors())
@@ -121,6 +122,7 @@ process.on('SIGINT', () => {
     }
 
   })
+  
   app.post('/users', async(req, res) => {
    console.log("POSTING USERS!")
    console.log("req.body: "+req.body )
@@ -129,8 +131,9 @@ process.on('SIGINT', () => {
       const connection =(await mysql.createConnection(dbConfig));
       const userId = Math.floor(Math.random() * 100000);
       const [rows] = await connection.execute(
-        "INSERT INTO uporabnik (id, ime, lokacija, geslo, odobreno) VALUES (?, ?, ?, ?, ?)",
-        [userId, username, location, password, 0]
+      //  "INSERT INTO uporabnik (id, ime, lokacija, geslo, odobreno) VALUES (?, ?, ?, ?, ?)",
+        "INSERT INTO uporabnik (id, ime, lokacija, geslo) VALUES (?, ?, ?, ?)",
+        [userId, username, location, password]
       );
       console.log("POST USER result: ",rows)
       res.json(rows);
@@ -152,10 +155,10 @@ process.on('SIGINT', () => {
       const [rows] =  await connection.execute(
       `SELECT * FROM uporabnik WHERE ime= ?  AND geslo=?`,[username,password]);
       console.log("validateUser result: ",rows)
-      res.json(rows);
+      res.status(200).json(rows);
     } catch (error) {
       console.error("Error validating user post:", error);
-      res.status(500).json({ error: "Internal Server Error" });
+      res.status(500).json({ error: "Internal Server Error: "+error });
     }
   })
 module.exports = app;

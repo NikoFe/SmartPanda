@@ -6,8 +6,13 @@ require('dotenv').config();
 const mysql = require('mysql2/promise');
 const grpc = require('@grpc/grpc-js');
 const protoLoader = require('@grpc/proto-loader');
+const path = require('path');
 
-const packageDef = protoLoader.loadSync('../Odobrenje_Narocila/proto/pending_order.proto', {
+
+//const PROTO_PATH = path.join(__dirname, 'external_proto/pending_order.proto');
+const PROTO_PATH = path.join(__dirname, '../Odobrenje_Narocila/proto/pending_order.proto')
+
+const packageDef = protoLoader.loadSync(PROTO_PATH, {
   keepCase: true,
   longs: String,
   enums: String,
@@ -35,6 +40,7 @@ function createApp(client = defaultClient) {
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
+    decimalNumbers: true // <<< ADD THIS
   };
 
   //1
@@ -112,7 +118,7 @@ app.delete('/user_has_meal/:user_id/:meal_id', async(req, res) => {
     if (!response.result =="SUCCESS") {
       return res.status(500).json({ error: response.message });
     }
-    return res.json({ message: "delete timer success" });
+    return res.status(200).json({ message: "delete timer success" });
 
    // return res.json({ message: response.message });
   });

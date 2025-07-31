@@ -7,9 +7,11 @@ const grpc = require("@grpc/grpc-js");
 const protoLoader = require("@grpc/proto-loader");
 const mysql = require("mysql2/promise");
 const dotenv = require("dotenv");
+const path = require('path');
 
 dotenv.config();
-const PROTO_PATH = "./proto/pending_order.proto";
+const PROTO_PATH = path.join(__dirname, 'proto', 'pending_order.proto');
+//const PROTO_PATH = "./proto/pending_order.proto";
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
   keepCase: true,
   longs: String,
@@ -157,7 +159,9 @@ const PendingOrderService = {
       await db.end();
       callback(null, { result: "SUCCESS" });
     } catch (error) {
-      console.log("Error:", error);
+
+      console.log("Error:", error, "\n \n host: ", host, " user ",user, 
+        " password: ", password, " database: ",database );
       await db.end();
       callback({
         code: grpc.status.INTERNAL,
