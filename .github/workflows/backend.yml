@@ -50,7 +50,7 @@ jobs:
 
       - name: Load initial schema/data
         run: |
-          mysql -h 127.0.0.1 -uroot -proot testdb < dump.sql
+          mysql -h 127.0.0.1 -uroot -pJebed1ah15car10t Bsmartpanda < dump.sql
 
       - name: Run Jest tests for Meni
         env:
