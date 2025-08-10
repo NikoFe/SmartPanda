@@ -1,85 +1,63 @@
-# Backend CI for Meni/backend microservice
-name: Backend CI
+name: Backend Tests (Meni)
 
 on:
   push:
     branches:
       - main
   pull_request:
-    branches:
-      - main
 
 jobs:
-  build-Meni:
+  test-meni:
     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: Jebed1ah15car10t
+          MYSQL_DATABASE: smartpanda
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -uroot -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
 
+      - name: Install dependencies (Meni)
+        run: npm ci
+        working-directory: ./Meni
 
-      - name: Cache node_modules
-        uses: actions/cache@v3
-        with:
-          path: Meni/node_modules
-          key: ${{ runner.os }}-backend-${{ hashFiles('Meni/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-backend-
-
-      - name: Install dependencies
+      - name: Wait for MySQL to be ready
         run: |
-          cd Meni
-          npm install
+          for i in {1..30}; do
+            if mysqladmin ping -h 127.0.0.1 -uroot -proot --silent; then
+              echo "MySQL is ready"
+              break
+            fi
+            echo "Waiting for MySQL..."
+            sleep 2
+          done
 
-      - name: Upload backend artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: backend-build
-          path: |
-            Meni/
-            Meni/node_modules/
-
-  test-backend:
-    needs: build-backend
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
-
-      - name: Cache node_modules
-        uses: actions/cache@v3
-        with:
-          path: Meni/node_modules
-          key: ${{ runner.os }}-backend-${{ hashFiles('Meni/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-backend-
-
-      - name: Install dependencies
+      - name: Load initial schema/data
         run: |
-          cd Meni
-          npm install
+          mysql -h 127.0.0.1 -uroot -proot testdb < dump.sql
 
-      - name: Fix Jest permissions
-        run: chmod +x Meni/node_modules/.bin/jest
-
-      - name: Run tests with coverage
-        run: |
-          cd Meni
-          npm run test:ci
-
-      - name: Upload coverage report
-        uses: actions/upload-artifact@v4
-        with:
-          name: backend-coverage
-          path: Meni/coverage/
+      - name: Run Jest tests for Meni
+        env:
+          NODE_ENV: test
+          DB_HOST: 127.0.0.1
+          DB_USER: root
+          DB_PASSWORD: Jebed1ah15car10t
+          DB_NAME: smartpanda
+        run: npm run test:ci
+        working-directory: ./Meni
