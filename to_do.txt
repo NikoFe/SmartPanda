@@ -1,3 +1,7 @@
 Allow user to revert/cancel buy
 
 Add error 500 test checks to all tests
+
+Automatic test on GitHub repo
+
+Open API

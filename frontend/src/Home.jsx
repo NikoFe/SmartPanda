@@ -26,7 +26,7 @@ const checkLogin = (navigationString) => {
   <button onClick={()=>{navigate("login")}} >LOGIN</button> 
   <button onClick={()=>{navigate("menu")}}  >MENU</button> 
   <button onClick={/*checkLogin("stock") */ ()=>{navigate("stock")}} >ORDER</button> 
-  <button onClick={()=>{navigate("approval")}}  >APPROVAL</button> 
+ {/* <button onClick={()=>{navigate("approval")}}  >APPROVAL</button> */} 
   
   {/*isAdmin?  <button onClick={()=>{navigate("approval")}}  >APPROVAL</button> : ""   */}
   </>

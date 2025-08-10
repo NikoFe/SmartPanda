@@ -121,10 +121,6 @@ const [usersHaveMeals, setUsersHaveMeals] = useState([]);
               />
             }
           />
-
-
-
-
         </Routes>
         <></>
       </BrowserRouter>

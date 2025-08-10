@@ -2,6 +2,9 @@ const express = require('express')
 const app = express()
 const cors = require("cors");
 const mysql = require("mysql2/promise");
+const swaggerJsdoc = require ("swagger-jsdoc")
+const swaggerUi =require ("swagger-ui-express")
+
 //require('dotenv').config();
 // Conditionally load .env based on NODE_ENV
 if (process.env.NODE_ENV === 'test') {
@@ -19,9 +22,55 @@ const dbConfig = {
 app.use(express.json());
 app.use(cors())
 
+// Swagger definition
+const swaggerDefinition = {
+  openapi: '3.0.0',
+  info: {
+    title: 'Meni API',
+    version: '1.0.0',
+    description: 'API documentation for my Express app'
+  },
+  servers: [
+    {
+      url: 'http://localhost:3000',
+      description: 'Local server for Meni'
+    }
+  ]
+};
+
+const options = {
+  swaggerDefinition,
+  apis: ['./Meni.js'] 
+};
+
+const swaggerSpec = swaggerJsdoc(options);
+
+// Swagger UI endpoint
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+/**
+ * @swagger
+ * /:
+ *   get:
+ *     summary: Root endpoint
+ *     responses:
+ *       200:
+ *         description: Returns a Hello World message
+ */
+
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
+/**
+ * @swagger
+ * /meals:
+ *   get:
+ *     summary: Get all meals
+ *     responses:
+ *       200:
+ *         description: List of meals
+ */
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 app.get('/meals',async (req, res) => {
  console.log("FETCHING MEALS!:")
@@ -46,7 +95,23 @@ app.listen(port, () => {
 })
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-  app.get('/meals/:id', async (req, res) => {
+  /**
+ * @swagger
+ * /meals/{id}:
+ *   get:
+ *     summary: Get a meal by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Meal detailss
+ */
+
+app.get('/meals/:id', async (req, res) => {
     id= parseInt(req.params.id)
     console.log("URL id: ||", id,"||")
     try {
@@ -63,6 +128,22 @@ app.listen(port, () => {
     }
 
   })
+
+/**
+ * @swagger
+ * /ingredients/{id}:
+ *   get:
+ *     summary: Get ingredients for a meal
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: List of ingredients
+ */
   app.get('/ingredients/:id', async(req, res) => {
     id=  parseInt(req.params.id)
     console.log("URL id: ||", id,"||")
@@ -89,6 +170,15 @@ process.on('SIGINT', () => {
  });
 
 /////////////////////////////////////////////////////OTHER:
+/**
+ * @swagger
+ * /users:
+ *   get:
+ *     summary: Get all users
+ *     responses:
+ *       200:
+ *         description: List of users
+ */
   app.get('/users', async(req, res) => {
     //let queryString = `SELECT sestavina.ime,kalorije FROM sestavina JOIN jed_has_sestavina ON Sestavina_id = sestavina.id  JOIN jed ON jed.id=Jed_id WHERE Jed_id =${id}`;
     try {
@@ -103,7 +193,27 @@ process.on('SIGINT', () => {
       res.status(500).json({ error: "Internal Server Error" });
     }
   })
-  
+
+/**
+ * @swagger
+ * /users/{username}/{password}:
+ *   get:
+ *     summary: Get user by username and password
+ *     parameters:
+ *       - in: path
+ *         name: username
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: password
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: User ID
+ */
   app.get('/users/:username/:password', async(req, res) => {
     let {username,password}=req.params
     console.log("USERNAME : ", username)
@@ -123,6 +233,28 @@ process.on('SIGINT', () => {
 
   })
   
+/**
+ * @swagger
+ * /users:
+ *   post:
+ *     summary: Create a new user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *               location:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: User created
+ */
   app.post('/users', async(req, res) => {
    console.log("POSTING USERS!")
    console.log("req.body: "+req.body )
@@ -142,6 +274,28 @@ process.on('SIGINT', () => {
       res.status(500).json({ error: "Internal Server Error" });
     }
   })
+
+
+/**
+ * @swagger
+ * /validateUser/{username}/{password}:
+ *   get:
+ *     summary: Validate a user
+ *     parameters:
+ *       - in: path
+ *         name: username
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: password
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Validation result
+ */
   app.get('/validateUser/:username/:password', async(req, res) => {
    console.log( "host: "+process.env.DB_HOST+" user "+  process.env.DB_USER+
      " password: "+ process.env.DB_PASSWORD+" database: "+ process.env.DB_NAME )

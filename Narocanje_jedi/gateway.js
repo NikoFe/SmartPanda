@@ -10,6 +10,8 @@ const grpc = require('@grpc/grpc-js');
 const protoLoader = require('@grpc/proto-loader');
 const path = require('path');
 const fs = require('fs');
+const swaggerJsdoc = require ("swagger-jsdoc")
+const swaggerUi =require ("swagger-ui-express")
 
 const localPath = path.join(__dirname, '../Odobrenje_Narocila/proto/pending_order.proto');
 
@@ -58,6 +60,56 @@ function createApp(client = defaultClient) {
     database: process.env.DB_NAME,
     decimalNumbers: true // <<< ADD THIS
   };
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Swagger definition
+const swaggerDefinition = {
+  openapi: '3.0.0',
+  info: {
+    title: 'Narocanje API',
+    version: '1.0.0',
+    description: 'API documentation for Narocanje jedi'
+  },
+  servers: [
+    {
+      url: 'http://localhost:3001',
+      description: 'Local server for Narocanje jedi'
+    }
+  ]
+};
+
+const options = {
+  swaggerDefinition,
+  apis: ['./gateway.js'] 
+};
+
+const swaggerSpec = swaggerJsdoc(options);
+
+// Swagger UI endpoint
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+/**
+ * @swagger
+ * /user_has_meal:
+ *   post:
+ *     summary: Insert into user_has_meal table
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               user_id:
+ *                 type: integer
+ *               meal_id:
+ *                 type: integer
+ *               amount:
+ *                 type: integer
+ *     responses:
+ *       200:
+ *         description: User_has_meal created
+ */
 
   //1
   app.post('/user_has_meal', async (req, res) => {
@@ -81,6 +133,29 @@ function createApp(client = defaultClient) {
       res.status(500).json({ error: "Internal Server Error" });
     }
   });
+
+/**
+ * @swagger
+ * /updateZaloga:
+ *   put:
+ *     summary: Update the amount in the meal
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               user_id:
+ *                 type: integer
+ *               meal_id:
+ *                 type: integer
+ *               amount:
+ *                 type: integer
+ *     responses:
+ *       200:
+ *         description: Meal amount updated
+ */
 
 //2.
 app.put('/updateZaloga',async (req, res) => {
@@ -109,6 +184,27 @@ app.put('/updateZaloga',async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
   })
+
+/**
+ * @swagger
+ * /user_has_meal/{user_id}/{meal_id}:
+ *   delete:
+ *     summary: Delete user has meal
+ *     parameters:
+ *       - in: path
+ *         name: user_id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - in: path
+ *         name: meal_id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Successful deletion
+ */
 
   //3
 app.delete('/user_has_meal/:user_id/:meal_id', async(req, res) => {
@@ -144,6 +240,16 @@ app.delete('/user_has_meal/:user_id/:meal_id', async(req, res) => {
   }
 })
 
+/**
+ * @swagger
+ * /meals:
+ *   get:
+ *     summary: Get all meals
+ *     responses:
+ *       200:
+ *         description: List of meals
+ */
+
   app.get('/meals', async (req, res) => {
     const db = await mysql.createConnection(dbConfig);
     try {
@@ -157,6 +263,26 @@ app.delete('/user_has_meal/:user_id/:meal_id', async(req, res) => {
     }
   });
 
+/**
+ * @swagger
+ * /users/{username}/{password}:
+ *   get:
+ *     summary: Get user id from user with specific username and password
+ *     parameters:
+ *       - in: path
+ *         name: username
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: password
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Retrieved user
+ */
 
 app.get('/users/:username/:password', async(req, res) => {
   console.log("FLOWERS")
