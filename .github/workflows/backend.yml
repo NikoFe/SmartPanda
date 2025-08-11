@@ -19,7 +19,7 @@ jobs:
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping -h localhost -uroot -pA"
+          --health-cmd="mysqladmin ping -h localhost -uroot -pJebed1ah15car10t"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
@@ -36,7 +36,7 @@ jobs:
       - name: Wait for MySQL to be ready
         run: |
           for i in {1..30}; do
-            if mysqladmin ping -h 127.0.0.1 -uroot -pA --silent; then
+            if mysqladmin ping -h 127.0.0.1 -uroot -pJebed1ah15car10t --silent; then
               echo "MySQL is ready"
               break
             fi
@@ -46,7 +46,7 @@ jobs:
 
       - name: Load initial schema/data
         run: |
-          mysql -h 127.0.0.1 -uroot -ppJebed1ah15car10t smartpanda < dump.sql
+          mysql -h 127.0.0.1 -uroot -pJebed1ah15car10t smartpanda < dump.sql
 
       # --- Meni tests ---
       - name: Install dependencies (Meni)
