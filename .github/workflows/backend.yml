@@ -1,13 +1,12 @@
-name: Backend Tests (Meni)
+name: Backend Tests
 
 on:
   push:
-    branches:
-      - main
+    branches: [main, master, develop]
   pull_request:
 
 jobs:
-  test-meni:
+  test-all-microservices:
     runs-on: ubuntu-latest
 
     services:
@@ -16,10 +15,11 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: Jebed1ah15car10t
           MYSQL_DATABASE: smartpanda
+          #MYSQL_ROOT_HOST: "%"
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping -h localhost -uroot -proot"
+          --health-cmd="mysqladmin ping -h localhost -uroot -pA"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
@@ -33,14 +33,10 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install dependencies (Meni)
-        run: npm ci
-        working-directory: ./Meni
-
       - name: Wait for MySQL to be ready
         run: |
           for i in {1..30}; do
-            if mysqladmin ping -h 127.0.0.1 -uroot -proot --silent; then
+            if mysqladmin ping -h 127.0.0.1 -uroot -pA --silent; then
               echo "MySQL is ready"
               break
             fi
@@ -50,14 +46,51 @@ jobs:
 
       - name: Load initial schema/data
         run: |
-          mysql -h 127.0.0.1 -uroot -pJebed1ah15car10t smartpanda < dump.sql
+          mysql -h 127.0.0.1 -uroot -ppJebed1ah15car10t smartpanda < dump.sql
 
-      - name: Run Jest tests for Meni
+      # --- Meni tests ---
+      - name: Install dependencies (Meni)
+        run: npm ci
+        working-directory: ./Meni
+
+      - name: Run Meni tests
         env:
           NODE_ENV: test
           DB_HOST: 127.0.0.1
           DB_USER: root
-          DB_PASSWORD: Jebed1ah15car10t
+          DB_PASSWORD: pJebed1ah15car10t
           DB_NAME: smartpanda
         run: npm run test:ci
         working-directory: ./Meni
+
+      # --- Odobrenje_Narocila tests ---
+      - name: Install dependencies (Odobrenje_Narocila)
+        run: npm ci
+        working-directory: ./Odobrenje_Narocila
+
+      - name: Run Odobrenje_Narocila tests
+        env:
+          NODE_ENV: test
+          DB_HOST: 127.0.0.1
+          DB_USER: root
+          DB_PASSWORD: pJebed1ah15car10t
+          DB_NAME: smartpanda
+        run: npm test
+        working-directory: ./Odobrenje_Narocila
+
+      # --- Narocanje_jedi tests ---
+      - name: Install dependencies (Narocanje_jedi)
+        run: npm ci
+        working-directory: ./Narocanje_jedi
+
+      - name: Run Narocanje_jedi tests
+        env:
+          NODE_ENV: test
+          DB_HOST: 127.0.0.1
+          DB_USER: root
+          DB_PASSWORD: pJebed1ah15car10t
+          DB_NAME: smartpanda
+          GRPC_HOST: localhost
+          GRPC_PORT: 50051
+        run: npm test
+        working-directory: ./Narocanje_jedi
