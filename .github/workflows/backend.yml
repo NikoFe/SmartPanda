@@ -15,7 +15,7 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: Jebed1ah15car10t
           MYSQL_DATABASE: smartpanda
-          #MYSQL_ROOT_HOST: "%"
+          MYSQL_ROOT_HOST: 127.0.0.1
         ports:
           - 3306:3306
         options: >-
