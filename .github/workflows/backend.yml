@@ -71,9 +71,9 @@ jobs:
           NODE_ENV: test
           DB_HOST: 127.0.0.1
           DB_USER: root
-          DB_PASSWORD: pJebed1ah15car10t
+          DB_PASSWORD: Jebed1ah15car10t
           DB_NAME: smartpanda
-        run: npm test
+        run: npm run test:ci
         working-directory: ./Odobrenje_Narocila
 
       # --- Narocanje_jedi tests ---
@@ -86,9 +86,9 @@ jobs:
           NODE_ENV: test
           DB_HOST: 127.0.0.1
           DB_USER: root
-          DB_PASSWORD: pJebed1ah15car10t
+          DB_PASSWORD: Jebed1ah15car10t
           DB_NAME: smartpanda
           GRPC_HOST: localhost
           GRPC_PORT: 50051
-        run: npm test
+        run: npm run test:ci
         working-directory: ./Narocanje_jedi
