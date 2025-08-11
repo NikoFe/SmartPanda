@@ -15,11 +15,10 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: Jebed1ah15car10t
           MYSQL_DATABASE: smartpanda
-          MYSQL_ROOT_HOST: 127.0.0.1
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping -h localhost -uroot -pJebed1ah15car10t"
+          --health-cmd="mysqladmin ping -h localhost -uroot -proot"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
@@ -33,10 +32,14 @@ jobs:
         with:
           node-version: 20
 
+      - name: Install dependencies (Meni)
+        run: npm ci
+        working-directory: ./Meni
+
       - name: Wait for MySQL to be ready
         run: |
           for i in {1..30}; do
-            if mysqladmin ping -h 127.0.0.1 -uroot -pJebed1ah15car10t --silent; then
+            if mysqladmin ping -h 127.0.0.1 -uroot -proot --silent; then
               echo "MySQL is ready"
               break
             fi
@@ -48,17 +51,12 @@ jobs:
         run: |
           mysql -h 127.0.0.1 -uroot -pJebed1ah15car10t smartpanda < dump.sql
 
-      # --- Meni tests ---
-      - name: Install dependencies (Meni)
-        run: npm ci
-        working-directory: ./Meni
-
-      - name: Run Meni tests
+      - name: Run Jest tests for Meni
         env:
           NODE_ENV: test
           DB_HOST: 127.0.0.1
           DB_USER: root
-          DB_PASSWORD: pJebed1ah15car10t
+          DB_PASSWORD: Jebed1ah15car10t
           DB_NAME: smartpanda
         run: npm run test:ci
         working-directory: ./Meni
